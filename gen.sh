@@ -4,6 +4,11 @@ echo "This will delete current setup."
 echo  -n "Are you sure you want to continue? (y):"
 read con
 
+clear
+echo "create a list of items you want in your form"
+sleep 2
+vim item.lst
+
 if [ $con = "y" ]
 then
     rm submit.js.php
@@ -14,6 +19,9 @@ then
     rm post.esc.php
     rm sql.entry.php
     rm create.table.php
+
+   
+    echo "<?php" >> post.esc.php
 
     cat item.lst|while read line
     do
@@ -26,6 +34,10 @@ then
         echo "\$$line = mysqli_real_escape_string($con, $_POST['$line']);" >> post.esc.php
     done
 
+
+    echo "?>" >> post.esc.php
+
+    echo "<?php" >> sql.entry.php
     echo -n "\$sql=\"INSERT INTO \$table (" >> sql.entry.php
     cat item.lst|while read line
     do
@@ -38,6 +50,8 @@ then
         echo -n "'$line', " >> sql.entry.php
     done
     echo ")\";">> sql.entry.php
+
+    echo "?>" >> sql.entry.php
 
     sed -i 's/, )/ )/g' sql.entry.php
 

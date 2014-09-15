@@ -1,1 +1,1 @@
-<?php $table="wer";?>
+<?php $table="epp";?>

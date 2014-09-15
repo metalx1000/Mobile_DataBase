@@ -1,3 +1,6 @@
 fname: fname,
 lname: lname,
+dob: dob,
+phone: phone,
+emplyee_num: emplyee_num,
 age: age,
