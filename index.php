@@ -8,31 +8,117 @@
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.3/jquery.mobile.structure-1.4.3.min.css" />
 	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.js"></script>
+
+        <script>
+            $(document).ready(function(){
+                $("#submit").click(function(){
+                    var fname=$("#fname").val();
+                    var lname=$("#lname").val();
+                    var age=$("#age").val();
+
+                    var key=generateKey();
+
+                    $.post( "add.php", { 
+                        FirstName: fname, 
+                        LastName: lname,
+                        Age: age,
+                        key_id: key
+                    }).done(function( data ) {
+                        $("#msg").html(data);
+                        clear_msg();
+
+                        $("#fname").val('');
+                        $("#lname").val('');
+                        $("#age").val('');
+
+                        get_json();
+                    });                
+                });
+           
+                //click or swipe
+                //comment out the one you don't want 
+                $("#listview").on('click','li',remove_item);
+                $("#listview").on('swipe','li',remove_item);
+                
+                get_json();
+                
+            });
+
+
+            function remove_item(event){
+                var pid=$(this).attr("pid");
+                $("[pid='" + pid + "']").remove();
+                $.post( "remove.php", {
+                    PID:pid
+                }).done(function( data ) {
+                    $("#msg").html(data);
+                    clear_msg();
+                    get_json();
+                });
+
+            }
+            function get_json(){
+                var url="get.php";
+                $.getJSON( url, function( data ) {
+                    $('ul').empty();
+                    for(var i = 0;i<data.length;i++){
+                        var fname=data[i].FirstName;
+                        var lname=data[i].LastName;
+                        var age=data[i].Age;
+                        var pid=data[i].PID;
+
+                        $('ul').append('<li pid="' + pid + '" class="rm_item"><a>' + fname + ' ' + lname + '<br> Age:' + age + '</a></li>');
+                    }
+
+                    $('ul').listview('refresh');             
+                });
+            }
+
+            function generateKey() {
+                var length = 8,
+                    charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+                    retVal = "";
+                for (var i = 0, n = charset.length; i < length; ++i) {
+                    retVal += charset.charAt(Math.floor(Math.random() * n));
+                }
+                return retVal;
+            }
+
+
+            function clear_msg(){
+                setTimeout(function(){
+                    $("#msg").html('');
+                },5000);
+            }
+
+            
+        </script>
 </head>
 <body>
 	<div data-role="page" data-theme="a">
 		<div data-role="header" data-position="inline">
-			<h1>It Worked!</h1>
+			<h1>Enter Something!</h1>
+                        <div id="msg" data-theme="b"></div>
 		</div>
 		<div data-role="content" data-theme="a">
-			<p>Your theme was successfully downloaded. You can use this page as a reference for how to link it up!</p>
-			<pre>
-<strong>&lt;link rel=&quot;stylesheet&quot; href=&quot;themes/basic.min.css&quot; /&gt;</strong>
-<strong>&lt;link rel=&quot;stylesheet&quot; href=&quot;themes/jquery.mobile.icons.min.css&quot; /&gt;</strong>
-&lt;link rel=&quot;stylesheet&quot; href=&quot;http://code.jquery.com/mobile/1.4.3/jquery.mobile.structure-1.4.3.min.css&quot; /&gt;
-&lt;script src=&quot;http://code.jquery.com/jquery-1.11.1.min.js&quot;&gt;&lt;/script&gt;
-&lt;script src=&quot;http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.js&quot;&gt;&lt;/script&gt;
-			</pre>
-			<p>This is content color swatch "A" and a preview of a <a href="#" class="ui-link">link</a>.</p>
-			<label for="slider1">Input slider:</label>
-			<input type="range" name="slider1" id="slider1" value="50" min="0" max="100" data-theme="a" />
-			<fieldset data-role="controlgroup"  data-type="horizontal" data-role="fieldcontain">
-			<legend>Cache settings:</legend>
-			<input type="radio" name="radio-choice-a1" id="radio-choice-a1" value="on" checked="checked" />
-			<label for="radio-choice-a1">On</label>
-			<input type="radio" name="radio-choice-a1" id="radio-choice-b1" value="off"  />
-			<label for="radio-choice-b1">Off</label>
-			</fieldset>
+                    <label>First Name:</label>
+                    <input type="text" id="fname" placeholder="Enter First Name">
+                    <label>Last Name:</label>
+                    <input type="text" id="lname" placeholder="Enter Last Name">
+                    <label>Age:</label>
+                    <input type="number" id="age" placeholder="Enter Age">
+
+                    <button id="submit">Submit</button>
+
+                <hr>
+                <div data-role="header" data-position="inline">
+                        <h1>Recent Entries</h1>
+                </div>
+
+                    <ul id="listview" data-role="listview" data-filter="true" data-inset="true">
+
+                    </ul>
+ 
 		</div>
 	</div>
 </body>
