@@ -12,24 +12,17 @@
         <script>
             $(document).ready(function(){
                 $("#submit").click(function(){
-                    var fname=$("#fname").val();
-                    var lname=$("#lname").val();
-                    var age=$("#age").val();
-
+                    <?php include('submit.js.php');?>
                     var key=generateKey();
 
                     $.post( "add.php", { 
-                        FirstName: fname, 
-                        LastName: lname,
-                        Age: age,
+                        <?php include('post.js.php');?>
                         key_id: key
                     }).done(function( data ) {
                         $("#msg").html(data);
                         clear_msg();
 
-                        $("#fname").val('');
-                        $("#lname").val('');
-                        $("#age").val('');
+                        <?php include("done.js.php");?>
 
                         get_json();
                     });                
@@ -62,12 +55,13 @@
                 $.getJSON( url, function( data ) {
                     $('ul').empty();
                     for(var i = 0;i<data.length;i++){
-                        var fname=data[i].FirstName;
-                        var lname=data[i].LastName;
-                        var age=data[i].Age;
+                        <?php include('get.js.php');?>
                         var pid=data[i].PID;
 
-                        $('ul').append('<li pid="' + pid + '" class="rm_item"><a>' + fname + ' ' + lname + '<br> Age:' + age + '</a></li>');
+                        var info = '<li pid="' + pid + '" class="rm_item"><a>';
+                        info += 'PID is ' + pid;
+                        info += '</a></li>';
+                        $('ul').append(info);
                     }
 
                     $('ul').listview('refresh');             
@@ -101,12 +95,7 @@
                         <div id="msg" data-theme="b"></div>
 		</div>
 		<div data-role="content" data-theme="a">
-                    <label>First Name:</label>
-                    <input type="text" id="fname" placeholder="Enter First Name">
-                    <label>Last Name:</label>
-                    <input type="text" id="lname" placeholder="Enter Last Name">
-                    <label>Age:</label>
-                    <input type="number" id="age" placeholder="Enter Age">
+                    <?php include('content.js.php');?>
 
                     <button id="submit">Submit</button>
 
