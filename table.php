@@ -1,3 +1,1 @@
-<?php
-$table="example4";
-?>
+<?php $table="wer";?>

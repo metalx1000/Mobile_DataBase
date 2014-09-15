@@ -8,16 +8,8 @@ if (mysqli_connect_errno()) {
 include('table.php');
 
 // Create table
-$sql = "CREATE TABLE $table
-(
-PID INT NOT NULL AUTO_INCREMENT, 
-PRIMARY KEY(PID),
-FirstName CHAR(15),
-LastName CHAR(15),
-Age INT,
-date CHAR(50),
-key_id CHAR(30)
-)";
+include('create.table.php');
+
 // Execute query
 if (mysqli_query($con,$sql)) {
   echo "Table $table created successfully";

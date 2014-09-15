@@ -13,6 +13,7 @@ then
     rm content.js.php
     rm post.esc.php
     rm sql.entry.php
+    rm create.table.php
 
     cat item.lst|while read line
     do
@@ -39,6 +40,24 @@ then
     echo ")\";">> sql.entry.php
 
     sed -i 's/, )/ )/g' sql.entry.php
+
+
+# Create table
+    echo "<?php" >> create.table.php
+    echo "\$sql = \"CREATE TABLE \$table(" >> create.table.php
+    echo "PID INT NOT NULL AUTO_INCREMENT," >> create.table.php
+    echo "PRIMARY KEY(PID)," >> create.table.php
+    cat item.lst|while read line
+    do
+        echo "$line CHAR(100)," >> create.table.php
+    done
+    echo "key_id CHAR(30)" >> create.table.php
+    echo ")\";">>create.table.php
+    echo "?>" >> create.table.php
+
+    echo -n "Table Name: "
+    read table
+    echo "<?php \$table=\"$table\";?>" > table.php
 else
     echo "exiting..."
     exit 0
