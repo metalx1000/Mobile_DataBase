@@ -31,7 +31,7 @@ then
         echo "var $line=data[i].$line;" >> get.js.php
         echo "<label>$line:</label>" >> content.js.php
         echo "<input type=\"text\" id=\"$line\" placeholder=\"$line\">" >> content.js.php
-        echo "\$$line = mysqli_real_escape_string($con, $_POST['$line']);" >> post.esc.php
+        echo "\$$line = mysqli_real_escape_string(\$con, \$_POST['$line']);" >> post.esc.php
     done
 
 
@@ -47,7 +47,7 @@ then
     echo -n ") VALUES (" >> sql.entry.php
     cat item.lst|while read line
     do
-        echo -n "'$line', " >> sql.entry.php
+        echo -n "'\$$line', " >> sql.entry.php
     done
     echo ")\";">> sql.entry.php
 
